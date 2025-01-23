@@ -1,4 +1,5 @@
 # NIRVANA_OIL
+# By Revanta Biswas and Srishti Gupta
 # Detailed Workflow for Nirvana: Oil Spill and Anomaly Detection System
 
 Nirvana is designed to monitor maritime environments using both AIS data and satellite Synthetic Aperture Radar (SAR) imagery. This workflow dives into the detailed steps involved in processing and analyzing these datasets, describing how each model and algorithm is used to detect anomalies and oil spills.
