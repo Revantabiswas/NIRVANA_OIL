@@ -94,7 +94,7 @@ Nirvana is an advanced maritime monitoring system that combines **AIS data** and
 
 ## **7. System Components & Architecture**  
 
-- **Dashboard**: React.js frontend for real-time monitoring.  
+- **Dashboard**: Next.js frontend for real-time monitoring.  
 - **Backend Services**: FastAPI for ML model integration.  
 - **Data Pipelines**: Kafka streams for real-time AIS data.  
 - **Storage**: PostgreSQL/MongoDB for logs, detections, and reports.  
