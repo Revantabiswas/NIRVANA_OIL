@@ -1,124 +1,103 @@
-# NIRVANA_OIL
+# **NIRVANA_OIL: AI-Powered Oil Spill and Anomaly Detection System**  
 
-# Detailed Workflow for Nirvana: Oil Spill and Anomaly Detection System
+## **Detailed Workflow for Nirvana**  
 
-Nirvana is designed to monitor maritime environments using both AIS data and satellite Synthetic Aperture Radar (SAR) imagery. This workflow dives into the detailed steps involved in processing and analyzing these datasets, describing how each model and algorithm is used to detect anomalies and oil spills.
-
----
-
-## 1. **Data Collection and Ingestion**
-
-### a) **Live AIS Data Collection**
-- **Source**: AIS data is streamed in real-time from vessels using the AISHUB.
-- **Ingestion Mechanism**: 
-  - **Apache Kafka** is used for real-time data ingestion and streaming. The Kafka server receives the AIS messages from various vessels, normalizes them, and forwards them to the preprocessing module.
-  
-### b) **Satellite SAR Data Collection**
-- **Source**: Sentinel-1 SAR satellite data is used for high-resolution images of the ocean surface.
-- **SAR Imagery Type**: 
-  - The data used is typically **Level-1 Ground Range Detected (GRD)** or **Single Look Complex (SLC)** images, which provide detailed backscatter information for surface analysis.
-- **Ingestion Mechanism**:
-  - SAR data is periodically downloaded or requested through Sentinal 1 Data for Copernicus Browser, processed, and stored for further analysis.
+Nirvana is an advanced maritime monitoring system that combines **AIS data** and **satellite SAR imagery** to detect **anomalies in vessel behavior** and **oil spills**. The system now incorporates AI agents for **enhanced anomaly detection, decision-making, and automated reporting**.  
 
 ---
 
-## 2. **Preprocessing and Feature Extraction**
+## **1. Data Collection and Ingestion**  
 
-### a) **AIS Data Preprocessing**
-1. **Noise Removal**:
-   - Remove incomplete or erroneous AIS messages.
-2. **Feature Engineering**:
-   - Calculate derived features such as speed, acceleration, change in course, and distance between successive positions.
-3. **Segmentation**:
-   - Break AIS data into segments (e.g., based on time or spatial zones) for each vessel to facilitate analysis.
+### **a) Live AIS Data Collection**  
+- **Source**: Real-time AIS data from vessels via AISHUB.  
+- **Ingestion Mechanism**:  
+  - **Apache Kafka** for real-time data streaming and preprocessing.  
 
-### b) **Satellite SAR Image Preprocessing**
-
----
-
-## 3. **Modeling and Analysis**
-
-### a) **Anomaly Detection in AIS Data**
-Multiple machine learning models are used to detect irregularities in vessel behavior:
-
-1. **DBSCAN (Density-Based Spatial Clustering of Applications with Noise)**:
-   - **Purpose**: Identify anomalous vessel trajectories based on clustering.
-   - **Method**: Group AIS data points based on location and time. Isolated points are flagged as anomalies, indicating sudden deviations or suspicious movements.
-
-2. **Kalman Filter**:
-   - **Purpose**: Predict the future state of the vessel (e.g., position, speed).
-   - **Method**: Use the Kalman filter for tracking and predicting the expected trajectory of a ship. Deviations from predicted paths are treated as potential anomalies.
-
-3. **Isolation Forest**:
-   - **Purpose**: Detect outliers in multi-dimensional AIS data.
-   - **Method**: The algorithm isolates anomalous behavior based on features like speed, course change, and acceleration.
-
-4. **Autoencoder**:
-   - **Purpose**: Detect complex anomalies by learning the normal behavior of vessels.
-   - **Method**: An autoencoder neural network is trained on normal AIS data patterns. During inference, any significant reconstruction error indicates an anomaly.
-
-### b) **Oil Spill Detection using SAR Satellite Images**
-
-1. **Image Classification with ResNet50**:
-   - **Purpose**: Classify SAR image patches as either "Oil Spill" or "No Oil Spill".
-   - **Method**: A pretrained **ResNet50** model is fine-tuned on SAR image datasets labeled with oil spill and non-oil spill regions. It extracts deep features from the images and outputs a classification score.
-
-2. **Image Segmentation with UNet**:
-   - **Purpose**: Segment the specific areas of an oil spill within a given SAR image.
-   - **Method**: The UNet architecture is used to create pixel-wise segmentation masks for the oil spill areas. It is particularly effective for detecting small, irregularly shaped oil patches and provides spatial boundaries of the spill.
-
-3. **Object Detection with YOLOv5**:
-   - **Purpose**: Detect and localize oil spill regions and ships simultaneously.
-   - **Method**: YOLOv5 (You Only Look Once) is trained on annotated SAR images to detect both ships and oil spill regions in a single forward pass. The bounding box coordinates are used to identify the exact locations of spills and nearby ships.
+### **b) Satellite SAR Data Collection**  
+- **Source**: Sentinel-1 SAR satellite images.  
+- **Ingestion Mechanism**:  
+  - Periodic retrieval from Copernicus Open Access Hub.  
 
 ---
 
-## 4. **Integration of AIS and Satellite Data**
+## **2. Preprocessing and Feature Extraction**  
 
-1. **Correlation Analysis**:
-   - Once an anomaly is detected in AIS data, the corresponding satellite data is retrieved for the same timestamp and location.
-   - The system cross-references the AIS-detected anomaly location with the satellite data to confirm oil spills or other irregularities.
+### **a) AIS Data Preprocessing**  
+- **Noise Removal**: Eliminates incomplete or erroneous messages.  
+- **Feature Engineering**: Derives speed, acceleration, and course change metrics.  
+- **Segmentation**: Breaks AIS data into vessel-specific time or spatial zones.  
 
-2. **Enhanced Detection**:
-   - Satellite data is used to validate AIS anomalies. For example:
-     - If a vessel shows erratic movement in AIS data, and the same area in the satellite image shows an oil spill, it strongly indicates the vessel is the source.
-     - If no anomaly is detected in AIS data, but an oil spill is detected in the satellite image, further investigation is required.
-
----
-
-## 5. **Reporting and Dashboard Visualization**
-
-1. **Real-Time Monitoring**:
-   - A live AIS map is provided on the dashboard, showing vessel positions, detected anomalies, and potential spill areas.
-   - Users can zoom into specific vessels, view historical trajectories, and investigate flagged anomalies.
-
-2. **Alert Generation**:
-   - Whenever a potential anomaly or oil spill is detected, the system sends real-time alerts to the dashboard, along with visual cues.
-
-3. **Detailed Reports**:
-   - For each detected spill or anomaly, a comprehensive report is generated.
-   - **Contents**:
-     - AIS anomaly summary (e.g., vessel ID, time of detection, type of anomaly).
-     - Satellite-based oil spill detection (location, size, spill extent).
-     - Correlation results, if both AIS and satellite data are used.
-   
-4. **Database Storage**:
-   - All detected events and generated reports are stored in the system database for historical analysis and compliance purposes.
+### **b) Satellite SAR Image Preprocessing**  
+- Standard SAR processing techniques applied before ML analysis.  
 
 ---
 
-## 6. **System Components and Interactions**
+## **3. AI-Powered Anomaly Detection & Oil Spill Analysis**  
 
-### a) **Dashboard Interface**:
-- A React.js-based frontend that provides an interactive interface for monitoring vessel movements and viewing real-time data.
+### **a) AIS Anomaly Detection**  
+🔹 **AIS Anomaly Detection Agent** (NEW) — Works alongside existing models:  
+1. **DBSCAN**: Detects anomalous vessel trajectories.  
+2. **Kalman Filter**: Predicts expected movement patterns.  
+3. **Isolation Forest**: Identifies outliers in vessel behavior.  
+4. **Autoencoder**: Learns normal AIS patterns and flags deviations.  
 
-### b) **Backend Services**:
-- **FastAPI** is used to serve the anomaly detection API, allowing the integration of multiple detection models (DBSCAN, Kalman, Isolation Forest, etc.).
-- A separate microservice handles oil spill detection from satellite data and generates reports.
+### **b) Oil Spill Detection from Satellite SAR Images**  
+🔹 **Satellite Image Processing Agent** (NEW) — Collaborates with ML models:  
+1. **ResNet50**: Classifies SAR image patches as “Oil Spill” or “No Oil Spill.”  
+2. **U-Net**: Segments oil spill regions in SAR images.  
+3. **YOLOv5**: Detects and localizes oil spills and nearby vessels.  
 
-### c) **Data Pipelines**:
-- **Kafka Stream**: Manages real-time AIS data flow.
-- **Database Service**: PostgreSQL or MongoDB for storing AIS logs, detected anomalies, and report data.
+---
+
+## **4. Cross-Validation and Decision Making**  
+
+🔹 **Decision-Making Agent** (NEW) — Positioned between AIS and oil spill detection models.  
+- **Function**:  
+  - **Cross-validates** AIS anomalies with satellite data.  
+  - **Assigns priority levels** based on spill severity and vessel behavior.  
+  - **Filters false positives** before alert generation.  
+
+🔹 **CrewAI Decision Layer** (NEW) — Added between "Anomaly Detected and Reported" & "Oil Spill Detected and Reported."  
+- Ensures AI-driven validation before oil spill confirmations.  
+
+---
+
+## **5. Automated Alerts, Reports & Feedback Optimization**  
+
+🔹 **Alert & Reporting Agent** (NEW) — Added before "Report Generated."  
+- **Function**:  
+  - Automates **real-time alerts** for detected spills.  
+  - Generates **structured reports** with vessel and spill details.  
+
+🔹 **AI Response & Action Module** (NEW) — Positioned after "Oil Spill Detected and Reported."  
+- **Function**:  
+  - Automates reporting workflows and next actions for regulatory bodies.  
+
+🔹 **AI Model Optimization Feedback** (NEW) — **New Feedback Loop** from "Report Generated" to "Pre-processing and Feature Selection."  
+- **Function**:  
+  - Continuously improves ML models based on past detection performance.  
+
+---
+
+## **6. Reporting and Dashboard Visualization**  
+
+1. **Real-Time Monitoring**  
+   - Live AIS map with **vessel positions, detected anomalies, and oil spills**.  
+
+2. **AI-Powered Alerts**  
+   - **Automated notifications** when anomalies or spills are detected.  
+
+3. **Comprehensive Reports**  
+   - Includes **AIS anomaly summaries**, **satellite spill detection**, and **cross-validation results**.  
+
+---
+
+## **7. System Components & Architecture**  
+
+- **Dashboard**: React.js frontend for real-time monitoring.  
+- **Backend Services**: FastAPI for ML model integration.  
+- **Data Pipelines**: Kafka streams for real-time AIS data.  
+- **Storage**: PostgreSQL/MongoDB for logs, detections, and reports.  
 
 ---
 .
