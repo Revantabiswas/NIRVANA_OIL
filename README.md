@@ -1,5 +1,5 @@
 # **NIRVANA_OIL: AI-Powered Oil Spill and Anomaly Detection System**  
-
+## Created By Revanta Biswas And Srishti Gupta 
 ## **Detailed Workflow for Nirvana**  
 
 Nirvana is an advanced maritime monitoring system that combines **AIS data** and **satellite SAR imagery** to detect **anomalies in vessel behavior** and **oil spills**. The system now incorporates AI agents for **enhanced anomaly detection, decision-making, and automated reporting**.  
